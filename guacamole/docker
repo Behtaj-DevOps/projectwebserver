@@ -1,0 +1,6 @@
+https://guacamole.apache.org/doc/gug/guacamole-docker.html
+
+docker run --name some-guacamole \
+    --link some-guacd:guacd        \
+    ...
+    -d -p 8080:8080 guacamole/guacamole
