@@ -1,0 +1,53 @@
+docker pull adguard/adguardhome
+docker run --name adguardhome\
+    --restart unless-stopped\
+    -v /my/own/workdir:/opt/adguardhome/work\
+    -v /my/own/confdir:/opt/adguardhome/conf\
+    -p 53:53/tcp -p 53:53/udp\
+    -p 67:67/udp -p 68:68/udp\
+    -p 80:80/tcp -p 443:443/tcp -p 443:443/udp -p 3000:3000/tcp\
+    -p 853:853/tcp\
+    -p 784:784/udp -p 853:853/udp -p 8853:8853/udp\
+    -p 5443:5443/tcp -p 5443:5443/udp\
+    -d adguard/adguardhom
+
+docker start adguardhome
+
+docker stop adguardhome
+
+docker rm adguardhome
+
+
+
+composefile:
+
+version: "2.1"
+services:
+  wireguard:
+    image: ghcr.io/linuxserver/wireguard
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Oslo
+      #- SERVERURL=wireguard.domain.com #optional
+      #- SERVERPORT=51820 #optional
+      - PEERS=1 #optional
+      - PEERDNS=auto #optional
+      - INTERNAL_SUBNET=10.13.13.0 #optional
+      - ALLOWEDIPS=0.0.0.0/0 #optional
+    volumes:
+      - /path/to/appdata/config:/config
+      - /lib/modules:/lib/modules
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
+
+
+docker-compose up -d
+
