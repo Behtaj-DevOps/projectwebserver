@@ -1,0 +1,31 @@
+version: '3'
+services:
+  netdata:
+    image: netdata/netdata:edge
+    container_name: netdata
+    hostname: netdata.nazarbazi.ir # set to fqdn of host
+    ports:
+      - 19999:19999
+    restart: unless-stopped
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - netdataconfig:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/cache/netdata
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+    environment:
+      - NETDATA_CLAIM_TOKEN=5fujKHTJhd9Z8Fs91pA91rSkk_e8bO4xOYOqIF0xpyJP36uxm5rAn1CaFHgVibIO-WWRU21nb3YS5bbO-CJxYXHb4MHbkbPxqos2za_-Xr1WuIgAo4KXgcLfjXFDuESRDjg18nc
+      - NETDATA_CLAIM_URL=https://app.netdata.cloud
+      - NETDATA_CLAIM_ROOMS=faf996b3-abb8-41dd-8ca0-d2f51bd5952b
+
+volumes:
+  netdataconfig:
+  netdatalib:
+  netdatacache:
